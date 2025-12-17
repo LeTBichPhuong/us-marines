@@ -45,12 +45,11 @@
         <!-- Patch nền -->
         <rect
             id="nameBg"
-            x="110"
-            y="521"
+            x="120"
+            y="519"
             rx="3"
             ry="3"
             width="140"
-            height="23"
             fill="#565559"
             stroke="#dec27a"
             stroke-width="1"
@@ -59,10 +58,10 @@
         <!-- Chữ -->
         <text
             id="printName"
-            x="115"
+            x="126"
             y="539"
             fill="#dec27a"
-            font-size="17"
+            font-size="16"
             font-weight="600"
             letter-spacing="0.2"
         >
@@ -78,26 +77,56 @@
     const text = document.getElementById('printName');
     const bg = document.getElementById('nameBg');
 
-    // Giữ cố định vị trí patch
-    const patchX = 110;
-    const textX  = 115;
-    const paddingX = 5;
+    const SHORT_LIMIT = 10;
+
+    const paddingX = 6;
+    const paddingY = 4;
+
+    const baseFontSize = 16;
+    const minFontSize = 11;
+    const maxPatchWidth = 160;
 
     if (!name) {
         bg.style.display = 'none';
     } else {
         text.textContent = name.toUpperCase();
+        text.setAttribute('font-size', baseFontSize);
 
         requestAnimationFrame(() => {
-            const box = text.getBBox();
+            let fontSize = baseFontSize;
+            let box = text.getBBox();
 
-            bg.setAttribute('x', patchX);
+            // giu nguyen patch vs text neu ky tu ngan
+            if (name.length <= SHORT_LIMIT) {
+                bg.setAttribute('width', box.width + paddingX * 2);
+                bg.setAttribute('height', box.height + paddingY * 2);
+                return;
+            }
+
+            // can chinh ky tu dai
+            bg.setAttribute('x', 98);
+            bg.setAttribute('y', 524);
+
+            text.setAttribute('x', 105);
+            text.setAttribute('y', 539);
+
+            // Thu nhỏ chữ
+            while (
+                box.width + paddingX * 2 > maxPatchWidth &&
+                fontSize > minFontSize
+            ) {
+                fontSize--;
+                text.setAttribute('font-size', fontSize);
+                box = text.getBBox();
+            }
+
+            // Patch ôm chữ
             bg.setAttribute('width', box.width + paddingX * 2);
-
-            text.setAttribute('x', textX);
+            bg.setAttribute('height', box.height + paddingY * 2);
         });
     }
 </script>
+
 
 
 
