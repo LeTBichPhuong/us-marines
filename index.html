@@ -77,12 +77,12 @@ const name = params.get('name');
 const text = document.getElementById('printName');
 const bg = document.getElementById('nameBg');
 
-const SHORT_LIMIT = 14;
+const SHORT_LIMIT = 13;
 
 const paddingX = 6;
 const paddingY = 4;
 
-const baseFontSize = 16;
+const baseFontSize = 14;
 const minFontSize = 10;
 const maxPatchWidth = 160;
 
@@ -117,7 +117,7 @@ if (!name) {
         bg.setAttribute('y', 524);
 
         text.setAttribute('x', 90);
-        text.setAttribute('y', 538);
+        text.setAttribute('y', 539);
 
         let fontSize = baseFontSize;
         let box = text.getBBox();
