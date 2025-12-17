@@ -225,7 +225,7 @@ const name = params.get('name');
 const text = document.getElementById('printName');
 const bg = document.getElementById('nameBg');
 
-// Controls
+// Các control điều chỉnh
 const posX = document.getElementById('posX');
 const posY = document.getElementById('posY');
 const longPosX = document.getElementById('longPosX');
@@ -236,24 +236,25 @@ const bgColor = document.getElementById('bgColor');
 const strokeColor = document.getElementById('strokeColor');
 const fontWeight = document.getElementById('fontWeight');
 
-const SHORT_LIMIT = 13;
-const paddingX = 6;
-const paddingY = 4;
-const baseFontSize = 14;
-const minFontSize = 10;
-const maxPatchWidth = 160;
+// Cấu hình
+const SHORT_LIMIT = 13;        // Giới hạn ký tự ngắn
+const paddingX = 6;           // Khoảng đệm ngang
+const paddingY = 4;           // Khoảng đệm dọc
+const baseFontSize = 14;      // Cỡ chữ mặc định
+const minFontSize = 10;       // Cỡ chữ nhỏ nhất
+const maxPatchWidth = 160;    // Chiều rộng tối đa của patch
 
-// Initial position (for names <= 13 chars)
+// Vị trí ban đầu (tên ngắn <= 13 ký tự)
 let initialX = 127;
 let initialY = 519;
 let initialTextY = 539;
 
-// Position for long names (>13 chars)
+// Vị trí cho tên dài (> 13 ký tự)
 let longX = 84;
 let longY = 524;
 let longTextY = 539;
 
-// Update display values - Short names
+// Cập nhật giá trị hiển thị – Tên ngắn
 posX.addEventListener('input', () => {
     document.getElementById('posXValue').textContent = posX.value;
     initialX = parseInt(posX.value);
@@ -267,7 +268,7 @@ posY.addEventListener('input', () => {
     updateName();
 });
 
-// Update display values - Long names
+// Cập nhật giá trị hiển thị – Tên dài
 longPosX.addEventListener('input', () => {
     document.getElementById('longPosXValue').textContent = longPosX.value;
     longX = parseInt(longPosX.value);
@@ -281,7 +282,7 @@ longPosY.addEventListener('input', () => {
     updateName();
 });
 
-// Common controls
+// Các control chung
 fontWeight.addEventListener('input', () => {
     document.getElementById('fontWeightValue').textContent = fontWeight.value;
     text.setAttribute('font-weight', fontWeight.value);
@@ -304,35 +305,43 @@ strokeColor.addEventListener('input', () => {
     bg.setAttribute('stroke', strokeColor.value);
 });
 
+// Hàm cập nhật tên
 function updateName() {
     if (!name) {
         bg.style.display = 'none';
         return;
     }
-    
+
     bg.style.display = 'block';
     text.textContent = name.toUpperCase();
     text.setAttribute('font-size', baseFontSize);
 
     requestAnimationFrame(() => {
+
+        // Trường hợp tên ngắn
         if (name.length <= SHORT_LIMIT) {
             text.setAttribute('text-anchor', 'start');
+
             const box = text.getBBox();
             const patchWidth = box.width + paddingX * 2;
             const patchHeight = box.height + paddingY * 2;
-            
+
             bg.setAttribute('x', initialX);
             bg.setAttribute('y', initialY);
             bg.setAttribute('width', patchWidth);
             bg.setAttribute('height', patchHeight);
-            
+
+            // Căn chữ ra giữa patch
             const centerX = initialX + patchWidth / 2;
             text.setAttribute('x', centerX);
             text.setAttribute('y', initialTextY);
             text.setAttribute('text-anchor', 'middle');
-        } else {
+        }
+        // Trường hợp tên dài
+        else {
             bg.setAttribute('x', longX);
             bg.setAttribute('y', longY);
+
             text.setAttribute('x', longX + 6);
             text.setAttribute('y', longTextY);
             text.setAttribute('text-anchor', 'start');
@@ -340,21 +349,24 @@ function updateName() {
             let fontSize = baseFontSize;
             let box = text.getBBox();
 
+            // Thu nhỏ chữ nếu vượt quá chiều rộng cho phép
             while (box.width + paddingX * 2 > maxPatchWidth && fontSize > minFontSize) {
                 fontSize--;
                 text.setAttribute('font-size', fontSize);
                 box = text.getBBox();
             }
 
+            // Patch ôm sát chữ
             bg.setAttribute('width', box.width + paddingX * 2);
             bg.setAttribute('height', box.height + paddingY * 2);
         }
     });
 }
 
-// Initialize
+// Khởi tạo
 updateName();
 </script>
+
 
 </body>
 </html>
