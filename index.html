@@ -45,7 +45,7 @@
         <!-- Patch nền -->
         <rect
             id="nameBg"
-            x="130"
+            x="127"
             y="519"
             rx="3"
             ry="3"
@@ -58,12 +58,12 @@
         <!-- Chữ -->
         <text
             id="printName"
-            x="136"
+            x="145"
             y="539"
             fill="#dec27a"
             font-size="16"
             font-weight="600"
-            letter-spacing="0.2"
+            letter-spacing="0.3"
         >
         </text>
 
@@ -71,64 +71,73 @@
 </div>
 
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name');
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name');
 
-    const text = document.getElementById('printName');
-    const bg = document.getElementById('nameBg');
+const text = document.getElementById('printName');
+const bg = document.getElementById('nameBg');
 
-    const SHORT_LIMIT = 10;
+const SHORT_LIMIT = 13;
 
-    const paddingX = 6;
-    const paddingY = 4;
+const paddingX = 6;
+const paddingY = 4;
 
-    const baseFontSize = 16;
-    const minFontSize = 11;
-    const maxPatchWidth = 160;
+const baseFontSize = 16;
+const minFontSize = 12;
+const maxPatchWidth = 160;
 
-    if (!name) {
-        bg.style.display = 'none';
-    } else {
-        text.textContent = name.toUpperCase();
-        text.setAttribute('font-size', baseFontSize);
+if (!name) {
+    bg.style.display = 'none';
+} else {
+    text.textContent = name.toUpperCase();
+    text.setAttribute('font-size', baseFontSize);
 
-        requestAnimationFrame(() => {
-            let fontSize = baseFontSize;
-            let box = text.getBBox();
+    requestAnimationFrame(() => {
 
-            // giu nguyen patch vs text neu ky tu ngan
-            if (name.length <= SHORT_LIMIT) {
-                bg.setAttribute('width', box.width + paddingX * 2);
-                bg.setAttribute('height', box.height + paddingY * 2);
-                return;
-            }
+        if (name.length <= SHORT_LIMIT) {
+            // đo kích thước path theo text
+            text.setAttribute('text-anchor', 'start');
+            const box = text.getBBox();
+            const patchWidth = box.width + paddingX * 2;
+            const patchHeight = box.height + paddingY * 2;
+            
+            bg.setAttribute('width', patchWidth);
+            bg.setAttribute('height', patchHeight);
+            
+            // Căn giữa text trong patch: vị trí patch + nửa chiều rộng patch
+            const centerX = 127 + patchWidth / 2;
+            text.setAttribute('x', centerX);
+            text.setAttribute('text-anchor', 'middle');
+            
+            return;
+        }
 
-            // can chinh ky tu dai
-            bg.setAttribute('x', 98);
-            bg.setAttribute('y', 524);
+        // Vị trí chữ và patch trên 13 ký tự
+        bg.setAttribute('x', 89);
+        bg.setAttribute('y', 524);
 
-            text.setAttribute('x', 105);
-            text.setAttribute('y', 540);
+        text.setAttribute('x', 95);
+        text.setAttribute('y', 540);
 
-            // Thu nhỏ chữ
-            while (
-                box.width + paddingX * 2 > maxPatchWidth &&
-                fontSize > minFontSize
-            ) {
-                fontSize--;
-                text.setAttribute('font-size', fontSize);
-                box = text.getBBox();
-            }
+        let fontSize = baseFontSize;
+        let box = text.getBBox();
 
-            // Patch ôm chữ
-            bg.setAttribute('width', box.width + paddingX * 2);
-            bg.setAttribute('height', box.height + paddingY * 2);
-        });
-    }
+        // Thu nhỏ chữ
+        while (
+            box.width + paddingX * 2 > maxPatchWidth &&
+            fontSize > minFontSize
+        ) {
+            fontSize--;
+            text.setAttribute('font-size', fontSize);
+            box = text.getBBox();
+        }
+
+        // Patch ôm chữ CHUẨN
+        bg.setAttribute('width', box.width + paddingX * 2);
+        bg.setAttribute('height', box.height + paddingY * 2);
+    });
+}
 </script>
-
-
-
 
 </body>
 </html>
