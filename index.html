@@ -1,372 +1,107 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In tên trên áo</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #777;
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            padding: 40px;
-            font-family: Arial, sans-serif;
-        }
-
-        .controls {
-            width: 220px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            height: fit-content;
-        }
-
-        .control-group {
-            margin-bottom: 18px;
-        }
-
-        .control-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 12px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
-            background: #fff;
-        }
-
-        input[type="color"] {
-            width: 100%;
-            height: 36px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 4px;
-            background: #ddd;
-            outline: none;
-            border-radius: 2px;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            background: #58595b;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-
-        .range-display {
-            font-size: 13px;
-            color: #58595b;
-            font-weight: 600;
-            float: right;
-        }
-
-        .product-preview {
-            position: relative;
-            width: 600px;
-        }
-
-        .product-preview img {
-            width: 100%;
-            display: block;
-        }
-
-        .print-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        h3 {
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #333;
-            border-bottom: 2px solid #58595b;
-            padding-bottom: 8px;
-        }
-
-        .url-display {
-            background: #f5f5f5;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: #666;
-            word-break: break-all;
-            margin-top: 20px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .url-display strong {
-            color: #333;
-            display: block;
-            margin-bottom: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+    <div class="controls">
+        <h3>≤13 KÝ TỰ</h3>
+        
+        <div class="control-group">
+            <label>Vị trí X <span class="range-display" id="posXValue">1416</span></label>
+            <input type="range" id="posX" min="0" max="11417" step="1" value="1416">
+        </div>
 
-<div class="controls">
-    <h3>≤13 KÝ TỰ</h3>
-    
-    <div class="control-group">
-        <label>Vị trí X <span class="range-display" id="posXValue">127</span></label>
-        <input type="range" id="posX" min="50" max="300" value="127">
+        <div class="control-group">
+            <label>Vị trí Y <span class="range-display" id="posYValue">7748</span></label>
+            <input type="range" id="posY" min="0" max="15264" step="1" value="7748">
+        </div>
+
+        <h3 style="margin-top: 25px;">>13 KÝ TỰ</h3>
+        
+        <div class="control-group">
+            <label>Vị trí X <span class="range-display" id="longPosXValue">1912</span></label>
+            <input type="range" id="longPosX" min="0" max="11417" step="1" value="1912">
+        </div>
+
+        <div class="control-group">
+            <label>Vị trí Y <span class="range-display" id="longPosYValue">7815</span></label>
+            <input type="range" id="longPosY" min="0" max="15264" step="1" value="7815">
+        </div>
+
+        <h3 style="margin-top: 25px;">CHUNG</h3>
+
+        <div class="control-group">
+            <label>Phông chữ</label>
+            <select id="fontFamily">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="'Courier New', monospace">Courier New</option>
+                <option value="'Times New Roman', serif">Times New Roman</option>
+                <option value="'Impact', sans-serif">Impact</option>
+                <option value="'Georgia', serif">Georgia</option>
+                <option value="'Verdana', sans-serif">Verdana</option>
+                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Màu chữ</label>
+            <input type="color" id="textColor" value="#dec27a">
+        </div>
+
+        <div class="control-group">
+            <label>Màu nền patch</label>
+            <input type="color" id="bgColor" value="#565559">
+        </div>
+
+        <div class="control-group">
+            <label>Màu viền</label>
+            <input type="color" id="strokeColor" value="#dec27a">
+        </div>
+
+        <div class="control-group">
+            <label>Độ đậm chữ <span class="range-display" id="fontWeightValue">600</span></label>
+            <input type="range" id="fontWeight" min="400" max="900" step="100" value="600">
+        </div>
     </div>
 
-    <div class="control-group">
-        <label>Vị trí Y <span class="range-display" id="posYValue">519</span></label>
-        <input type="range" id="posY" min="400" max="700" value="519">
+    <div class="product-preview">
+        <img src="us-marines.jpg" alt="Áo">
+
+        <svg class="print-layer" viewBox="0 0 11417 15264" preserveAspectRatio="xMidYMid meet">
+            <rect
+                id="nameBg"
+                x="1416"
+                y="7748"
+                rx="25"
+                ry="25"
+                width="140"
+                height="31"
+                fill="#565559"
+                stroke="#dec27a"
+                stroke-width="12"
+            />
+
+            <text
+                id="printName"
+                y="8048"
+                fill="#dec27a"
+                font-size="16"
+                font-weight="600"
+                font-family="Arial, sans-serif"
+                letter-spacing="0.3"
+                dominant-baseline="middle"
+            ></text>
+        </svg>
     </div>
 
-    <h3 style="margin-top: 25px;">>13 KÝ TỰ</h3>
-    
-    <div class="control-group">
-        <label>Vị trí X <span class="range-display" id="longPosXValue">84</span></label>
-        <input type="range" id="longPosX" min="50" max="200" value="84">
-    </div>
+    <button id="exportBtn">EXPORT</button>
 
-    <div class="control-group">
-        <label>Vị trí Y <span class="range-display" id="longPosYValue">524</span></label>
-        <input type="range" id="longPosY" min="400" max="700" value="524">
-    </div>
-
-    <h3 style="margin-top: 25px;">CHUNG</h3>
-
-    <div class="control-group">
-        <label>Phông chữ</label>
-        <select id="fontFamily">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="'Courier New', monospace">Courier New</option>
-            <option value="'Times New Roman', serif">Times New Roman</option>
-            <option value="'Impact', sans-serif">Impact</option>
-            <option value="'Georgia', serif">Georgia</option>
-            <option value="'Verdana', sans-serif">Verdana</option>
-            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-        </select>
-    </div>
-
-    <div class="control-group">
-        <label>Màu chữ</label>
-        <input type="color" id="textColor" value="#dec27a">
-    </div>
-
-    <div class="control-group">
-        <label>Màu nền patch</label>
-        <input type="color" id="bgColor" value="#565559">
-    </div>
-
-    <div class="control-group">
-        <label>Màu viền</label>
-        <input type="color" id="strokeColor" value="#dec27a">
-    </div>
-
-    <div class="control-group">
-        <label>Độ đậm chữ <span class="range-display" id="fontWeightValue">600</span></label>
-        <input type="range" id="fontWeight" min="400" max="900" step="100" value="600">
-    </div>
-</div>
-
-<div class="product-preview">
-    <img src="us-marines.jpg" alt="Áo">
-
-    <svg class="print-layer" viewBox="0 0 1024 1024">
-        <rect
-            id="nameBg"
-            x="127"
-            y="519"
-            rx="3"
-            ry="3"
-            width="140"
-            fill="#565559"
-            stroke="#dec27a"
-            stroke-width="1"
-        />
-
-        <text
-            id="printName"
-            x="145"
-            y="539"
-            fill="#dec27a"
-            font-size="16"
-            font-weight="600"
-            font-family="Arial, sans-serif"
-            letter-spacing="0.3"
-        ></text>
-    </svg>
-</div>
-
-<script>
-const params = new URLSearchParams(window.location.search);
-const name = params.get('name');
-
-const text = document.getElementById('printName');
-const bg = document.getElementById('nameBg');
-
-// Các control điều chỉnh
-const posX = document.getElementById('posX');
-const posY = document.getElementById('posY');
-const longPosX = document.getElementById('longPosX');
-const longPosY = document.getElementById('longPosY');
-const fontFamily = document.getElementById('fontFamily');
-const textColor = document.getElementById('textColor');
-const bgColor = document.getElementById('bgColor');
-const strokeColor = document.getElementById('strokeColor');
-const fontWeight = document.getElementById('fontWeight');
-
-// Cấu hình
-const SHORT_LIMIT = 13;        // Giới hạn ký tự ngắn
-const paddingX = 6;           // Khoảng đệm ngang
-const paddingY = 4;           // Khoảng đệm dọc
-const baseFontSize = 14;      // Cỡ chữ mặc định
-const minFontSize = 10;       // Cỡ chữ nhỏ nhất
-const maxPatchWidth = 160;    // Chiều rộng tối đa của patch
-
-// Vị trí ban đầu (tên ngắn <= 13 ký tự)
-let initialX = 127;
-let initialY = 519;
-let initialTextY = 539;
-
-// Vị trí cho tên dài (> 13 ký tự)
-let longX = 84;
-let longY = 524;
-let longTextY = 539;
-
-// Cập nhật giá trị hiển thị – Tên ngắn
-posX.addEventListener('input', () => {
-    document.getElementById('posXValue').textContent = posX.value;
-    initialX = parseInt(posX.value);
-    updateName();
-});
-
-posY.addEventListener('input', () => {
-    document.getElementById('posYValue').textContent = posY.value;
-    initialY = parseInt(posY.value);
-    initialTextY = initialY + 20;
-    updateName();
-});
-
-// Cập nhật giá trị hiển thị – Tên dài
-longPosX.addEventListener('input', () => {
-    document.getElementById('longPosXValue').textContent = longPosX.value;
-    longX = parseInt(longPosX.value);
-    updateName();
-});
-
-longPosY.addEventListener('input', () => {
-    document.getElementById('longPosYValue').textContent = longPosY.value;
-    longY = parseInt(longPosY.value);
-    longTextY = longY + 15;
-    updateName();
-});
-
-// Các control chung
-fontWeight.addEventListener('input', () => {
-    document.getElementById('fontWeightValue').textContent = fontWeight.value;
-    text.setAttribute('font-weight', fontWeight.value);
-});
-
-fontFamily.addEventListener('change', () => {
-    text.setAttribute('font-family', fontFamily.value);
-    updateName();
-});
-
-textColor.addEventListener('input', () => {
-    text.setAttribute('fill', textColor.value);
-});
-
-bgColor.addEventListener('input', () => {
-    bg.setAttribute('fill', bgColor.value);
-});
-
-strokeColor.addEventListener('input', () => {
-    bg.setAttribute('stroke', strokeColor.value);
-});
-
-// Hàm cập nhật tên
-function updateName() {
-    if (!name) {
-        bg.style.display = 'none';
-        return;
-    }
-
-    bg.style.display = 'block';
-    text.textContent = name.toUpperCase();
-    text.setAttribute('font-size', baseFontSize);
-
-    requestAnimationFrame(() => {
-
-        // Trường hợp tên ngắn
-        if (name.length <= SHORT_LIMIT) {
-            text.setAttribute('text-anchor', 'start');
-
-            const box = text.getBBox();
-            const patchWidth = box.width + paddingX * 2;
-            const patchHeight = box.height + paddingY * 2;
-
-            bg.setAttribute('x', initialX);
-            bg.setAttribute('y', initialY);
-            bg.setAttribute('width', patchWidth);
-            bg.setAttribute('height', patchHeight);
-
-            // Căn chữ ra giữa patch
-            const centerX = initialX + patchWidth / 2;
-            text.setAttribute('x', centerX);
-            text.setAttribute('y', initialTextY);
-            text.setAttribute('text-anchor', 'middle');
-        }
-        // Trường hợp tên dài
-        else {
-            bg.setAttribute('x', longX);
-            bg.setAttribute('y', longY);
-
-            text.setAttribute('x', longX + 6);
-            text.setAttribute('y', longTextY);
-            text.setAttribute('text-anchor', 'start');
-
-            let fontSize = baseFontSize;
-            let box = text.getBBox();
-
-            // Thu nhỏ chữ nếu vượt quá chiều rộng cho phép
-            while (box.width + paddingX * 2 > maxPatchWidth && fontSize > minFontSize) {
-                fontSize--;
-                text.setAttribute('font-size', fontSize);
-                box = text.getBBox();
-            }
-
-            // Patch ôm sát chữ
-            bg.setAttribute('width', box.width + paddingX * 2);
-            bg.setAttribute('height', box.height + paddingY * 2);
-        }
-    });
-}
-
-// Khởi tạo
-updateName();
-</script>
-
-
+    <script src="index.js"></script>
+    <script src="export.js"></script>
 </body>
 </html>
