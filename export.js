@@ -17,41 +17,50 @@ document.getElementById('exportBtn').addEventListener('click', async () => {
     const svgClone = svgEl.cloneNode(true);
     svgClone.setAttribute('width', WIDTH);
     svgClone.setAttribute('height', HEIGHT);
-    svgClone.setAttribute('viewBox', '0 0 11417 15264');
+    svgClone.setAttribute('viewBox', `0 0 ${WIDTH} ${HEIGHT}`);
 
     const serializer = new XMLSerializer();
     const svgStr = serializer.serializeToString(svgClone);
+
     const svgBlob = new Blob([svgStr], {
         type: 'image/svg+xml;charset=utf-8'
     });
 
     const svgUrl = URL.createObjectURL(svgBlob);
+
     const svgImg = new Image();
+    svgImg.crossOrigin = 'anonymous';
 
     await new Promise(resolve => {
         svgImg.onload = resolve;
         svgImg.src = svgUrl;
     });
 
-    // canvas
+    // ===== CANVAS GỐC IN XƯỞNG =====
     const canvas = document.createElement('canvas');
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
-    const ctx = canvas.getContext('2d');
 
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // Áo
     ctx.drawImage(shirtImg, 0, 0, WIDTH, HEIGHT);
 
+    // Patch + Text
     ctx.drawImage(svgImg, 0, 0, WIDTH, HEIGHT);
 
     URL.revokeObjectURL(svgUrl);
 
-    // export
+    // export 
     canvas.toBlob(blob => {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = (name || 'print-shirt').toUpperCase() + '.png';
+        a.download = ((name || 'print-shirt').toUpperCase()) + '.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
     }, 'image/png');
+
 });
