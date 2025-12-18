@@ -36,7 +36,7 @@ document.getElementById('exportBtn').addEventListener('click', async () => {
         svgImg.src = svgUrl;
     });
 
-    // ===== CANVAS GỐC IN XƯỞNG =====
+    // CANVAS GỐC IN XƯỞNG
     const canvas = document.createElement('canvas');
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
@@ -55,12 +55,23 @@ document.getElementById('exportBtn').addEventListener('click', async () => {
 
     // export 
     canvas.toBlob(blob => {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = ((name || 'print-shirt').toUpperCase()) + '.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const url = URL.createObjectURL(blob);
+
+        // MOBILE
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            window.open(url, '_blank');
+        }
+        // DESKTOP
+        else {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = ((name || 'print-shirt').toUpperCase()) + '.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
     }, 'image/png');
+
 
 });
