@@ -134,3 +134,47 @@ h3 {
     width: 100px;
     height: 50px;
 }
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .controls {
+        width: 100%;
+        max-width: 100%;
+        order: 2;
+    }
+
+    .product-preview {
+        width: 100%;
+        max-width: 100%;
+        order: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+
+    .product-preview {
+        width: calc(100vw - 10px);
+        max-width: calc(100vw - 10px);
+    }
+
+    .controls {
+        padding: 12px;
+    }
+
+    h3 {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+
+    .control-group {
+        margin-bottom: 12px;
+    }
+}
